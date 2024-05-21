@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Панель управления</title>
+</head>
+<body>
+<h1>Добро пожаловать, <%= user.username %></h1>
+<% if (user.isAdmin) { %>
+    <a href="/users">Управление пользователями</a>
+<% } %>
+<a href="/items">Список всех аукционов</a>
+<a href="/auth/logout">Выйти</a>
+</body>
+</html>

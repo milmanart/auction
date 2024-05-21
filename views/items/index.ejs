@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Предметы на аукционе</title>
+</head>
+<body>
+<h1>Предметы на аукционе</h1>
+<% if (success_msg) { %>
+    <div class="success"><%= success_msg %></div>
+<% } %>
+<% if (error_msg) { %>
+    <div class="error"><%= error_msg %></div>
+<% } %>
+<a href="/items/add">Добавить предмет</a>
+<ul>
+    <% items.forEach(function(item) { %>
+        <li>
+            <strong><%= item.title %></strong><br>
+            <%= item.description %><br>
+            Начальная цена: <%= item.initialPrice %> руб.<br>
+            Текущая цена: <%= item.currentPrice %> руб.<br>
+            Продавец: <%= item.user.username %><br>
+            <% if (item.buyer) { %>
+                Купил: <%= item.buyer.username %><br>
+            <% } %>
+            <% if (user && !item.user._id.equals(user._id)) { %>
+                <form action="/items/buy/<%= item._id %>" method="POST" style="display:inline;">
+                    <input type="number" name="newPrice" min="<%= item.currentPrice + 1 %>" required>
+                    <button type="submit">Перебить цену и купить</button>
+                </form>
+            <% } %>
+            <% if (user && item.user._id.equals(user._id)) { %>
+                <form action="/items/delete/<%= item._id %>?_method=DELETE" method="POST" style="display:inline;">
+                    <button type="submit">Удалить</button>
+                </form>
+            <% } %>
+        </li>
+    <% }); %>
+</ul>
+<a href="/auth/dashboard">Назад в личный кабинет</a>
+</body>
+</html>

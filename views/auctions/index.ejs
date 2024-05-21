@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Управление аукционами</title>
+</head>
+<body>
+<h1>Аукционы</h1>
+<a href="/auctions/add">Добавить предмет на аукцион</a>
+<ul>
+    <% auctions.forEach(function(auction) { %>
+        <li>
+            <%= auction.title %> - <%= auction.currentBid %>$
+            <a href="/auctions/edit/<%= auction._id %>">Редактировать</a>
+            <a href="/auctions/delete/<%= auction._id %>">Удалить</a>
+        </li>
+    <% }); %>
+</ul>
+<a href="/">Назад на главную</a>
+</body>
+</html>
