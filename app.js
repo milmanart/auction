@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const session = require('express-session');
 const flash = require('connect-flash');
 const methodOverride = require('method-override');
+const MongoStore = require('connect-mongo');
 const app = express();
 
 // Подключение к базе данных MongoDB
@@ -30,12 +31,16 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // Подключение method-override для поддержки PUT и DELETE методов
 app.use(methodOverride('_method'));
 
-// Express session
+// Настройка сессий с использованием MongoDB в качестве хранилища
 app.use(
     session({
         secret: 'secret',
-        resave: true,
-        saveUninitialized: true
+        resave: false,
+        saveUninitialized: false,
+        store: MongoStore.create({
+            mongoUrl: 'mongodb://localhost:27017/auction-system',
+            ttl: 14 * 24 * 60 * 60 // Сессия хранится 14 дней
+        })
     })
 );
 
