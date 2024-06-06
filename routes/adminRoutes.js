@@ -3,7 +3,7 @@ const router = express.Router();
 const adminController = require('../controllers/adminController');
 const { ensureAuthenticated } = require('../config/auth');
 
-// Проверка роли администратора
+// Sprawdzenie roli administratora
 function ensureAdmin(req, res, next) {
     if (req.session.user && req.session.user.isAdmin) {
         return next();
@@ -12,7 +12,7 @@ function ensureAdmin(req, res, next) {
     res.redirect('/');
 }
 
-// Маршруты администратора
+// Trasy administratora
 router.get('/dashboard', ensureAuthenticated, ensureAdmin, adminController.adminDashboard);
 router.get('/users', ensureAuthenticated, ensureAdmin, adminController.getAllUsers);
 router.delete('/users/:id', ensureAuthenticated, ensureAdmin, adminController.deleteUser);

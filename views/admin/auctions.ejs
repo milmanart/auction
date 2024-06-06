@@ -20,7 +20,9 @@
         <% auctions.forEach(function(auction) { %>
             <li>
                 <%= auction.title %> - <%= auction.currentPrice %> PLN
-                <a href="/auctions/delete/<%= auction._id %>?_method=DELETE">Usuń</a>
+                <form action="/admin/auctions/<%= auction._id %>?_method=DELETE" method="POST" style="display:inline;">
+                    <button type="submit">Usuń</button>
+                </form>
             </li>
         <% }); %>
     </ul>

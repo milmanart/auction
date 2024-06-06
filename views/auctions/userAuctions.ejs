@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Przedmioty na aukcji</title>
+    <title>Moje aukcje</title>
     <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
@@ -15,6 +15,7 @@
     <% if (error_msg) { %>
         <div class="error"><%= error_msg %></div>
     <% } %>
+    <h2>Moje aukcje</h2>
     <ul>
         <% auctions.forEach(function(auction) { %>
             <li>
@@ -22,12 +23,12 @@
                     <strong><%= auction.title %></strong><br>
                     <%= auction.description %><br>
                     Cena początkowa: <%= auction.initialPrice %> PLN<br>
-                    Obecna cena: <%= auction.currentPrice %> PLN<br>
+                    Cena bieżąca: <%= auction.currentPrice %> PLN<br>
                     <% if (auction.user) { %>
                         Sprzedawca: <%= auction.user.username %><br>
                     <% } %>
                     <% if (auction.buyer) { %>
-                        Kupujący: <%= auction.buyer.username %><br>
+                        Kupił: <%= auction.buyer.username %><br>
                     <% } %>
                 </div>
                 <div>
@@ -41,7 +42,7 @@
                             <% } else { %>
                                 <form action="/auctions/buy/<%= auction._id %>" method="POST" style="display:inline;">
                                     <input type="hidden" name="newPrice" value="<%= auction.currentPrice %>">
-                                    <button type="submit">Kup za obecną cenę</button>
+                                    <button type="submit">Kup za bieżącą cenę</button>
                                 </form>
                             <% } %>
                         <% } %>

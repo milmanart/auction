@@ -1,91 +1,91 @@
-const Item = require('../models/Item');
+const auction = require('../models/auction');
 
-exports.addItem = async (req, res) => {
+exports.addauction = async (req, res) => {
     try {
         const { title, description, price } = req.body;
-        const newItem = new Item({
+        const newauction = new auction({
             title,
             description,
             initialPrice: price,
             currentPrice: price,
             user: req.session.user._id
         });
-        await newItem.save();
-        res.redirect('/items');
+        await newauction.save();
+        res.redirect('/auctions');
     } catch (err) {
         res.status(500).send(err);
     }
 };
 
-exports.buyItem = async (req, res) => {
+exports.buyauction = async (req, res) => {
     try {
-        const item = await Item.findById(req.params.id);
+        const auction = await auction.findById(req.params.id);
         const newPrice = req.body.newPrice;
 
-        if (item.user.equals(req.session.user._id)) {
+        if (auction.user.equals(req.session.user._id)) {
             req.flash('error_msg', 'Nie możesz kupić swojego przedmiotu');
-            return res.redirect('/items');
+            return res.redirect('/auctions');
         }
 
-        if (item.buyer) {
-            if (newPrice <= item.currentPrice) {
+        if (auction.buyer) {
+            if (newPrice <= auction.currentPrice) {
                 req.flash('error_msg', 'Nowa cena musi być wyższa od bieżącej');
-                return res.redirect('/items');
+                return res.redirect('/auctions');
             }
 
-            item.currentPrice = newPrice;
+            auction.currentPrice = newPrice;
         } else {
-            if (newPrice < item.currentPrice) {
+            if (newPrice < auction.currentPrice) {
                 req.flash('error_msg', 'Cena nie może być niższa od bieżącej');
-                return res.redirect('/items');
+                return res.redirect('/auctions');
             }
 
-            item.currentPrice = newPrice;
+            auction.currentPrice = newPrice;
         }
 
-        item.buyer = req.session.user._id;
-        await item.save();
-        res.redirect('/items');
+        auction.buyer = req.session.user._id;
+        await auction.save();
+        res.redirect('/auctions');
     } catch (err) {
         res.status(500).send(err);
     }
 };
 
-exports.deleteItem = async (req, res) => {
+exports.deleteauction = async (req, res) => {
     try {
-        const item = await Item.findById(req.params.id);
-        if (!item) {
+        const auction = await auction.findById(req.params.id);
+        if (!auction) {
             req.flash('error_msg', 'Przedmiot nie został znaleziony');
-            return res.redirect('/items');
+            return res.redirect('/auctions');
         }
-        if (item.user.equals(req.session.user._id)) {
-            await Item.deleteOne({ _id: req.params.id });
+        if (auction.user.equals(req.session.user._id)) {
+            await auction.deleteOne({ _id: req.params.id });
             req.flash('success_msg', 'Przedmiot został usunięty');
-            res.redirect('/items');
+            res.redirect('/auctions');
         } else {
             req.flash('error_msg', 'Nie możesz usunąć tego przedmiotu');
-            res.redirect('/items');
+            res.redirect('/auctions');
         }
     } catch (err) {
         console.error('Błąd podczas usuwania przedmiotu:', err);
         req.flash('error_msg', 'Błąd podczas usuwania przedmiotu');
-        res.redirect('/items');
+        res.redirect('/auctions');
     }
 };
 
-exports.getAllItems = async (req, res) => {
+exports.getAllauctions = async (req, res) => {
     try {
-        const items = await Item.find({}).populate('user', 'username').populate('buyer', 'username');
-        res.render('items/index', { items });
+        const auctions = await auction.find({}).populate('user', 'username').populate('buyer', 'username');
+        res.render('auctions/index', { auctions });
     } catch (err) {
         res.status(500).send(err);
     }
 };
 
-exports.getUserItems = async (req, res) => {
+exports.getUserauctions = async (req, res) => {
     try {
-        const items = await Item.find({ user: req.session.user._id }).populate('user', 'username').populate('buyer', 'username');
-        res.render('items/userItems', { items });
+        const auctions = await auction.find({ user: req.session.user._id }).populate('user', 'username').populate('buyer', 'username');
+        res.render('auctions/userauctions', { auctions });
     } catch (err) {
         res.status(500).send(err);
     }

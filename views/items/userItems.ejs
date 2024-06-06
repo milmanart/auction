@@ -17,38 +17,38 @@
     <% } %>
     <h2>Moje aukcje</h2>
     <ul>
-        <% items.forEach(function(item) { %>
+        <% auctions.forEach(function(auction) { %>
             <li>
                 <div>
-                    <strong><%= item.title %></strong><br>
-                    <%= item.description %><br>
-                    Cena początkowa: <%= item.initialPrice %> PLN<br>
-                    Obecna cena: <%= item.currentPrice %> PLN<br>
-                    <% if (item.user) { %>
-                        Sprzedawca: <%= item.user.username %><br>
+                    <strong><%= auction.title %></strong><br>
+                    <%= auction.description %><br>
+                    Cena początkowa: <%= auction.initialPrice %> PLN<br>
+                    Obecna cena: <%= auction.currentPrice %> PLN<br>
+                    <% if (auction.user) { %>
+                        Sprzedawca: <%= auction.user.username %><br>
                     <% } %>
-                    <% if (item.buyer) { %>
-                        Kupujący: <%= item.buyer.username %><br>
+                    <% if (auction.buyer) { %>
+                        Kupujący: <%= auction.buyer.username %><br>
                     <% } %>
                 </div>
                 <div>
-                    <% if (user && item.user && item.user._id && !item.user._id.equals(user._id)) { %>
-                        <% if (!item.buyer || (item.buyer && !item.buyer.equals(user._id))) { %>
-                            <% if (item.buyer) { %>
-                                <form action="/items/buy/<%= item._id %>" method="POST" style="display:inline;">
-                                    <input type="number" name="newPrice" min="<%= item.currentPrice + 1 %>" required>
+                    <% if (user && auction.user && auction.user._id && !auction.user._id.equals(user._id)) { %>
+                        <% if (!auction.buyer || (auction.buyer && !auction.buyer.equals(user._id))) { %>
+                            <% if (auction.buyer) { %>
+                                <form action="/auctions/buy/<%= auction._id %>" method="POST" style="display:inline;">
+                                    <input type="number" name="newPrice" min="<%= auction.currentPrice + 1 %>" required>
                                     <button type="submit">Przebij cenę i kup</button>
                                 </form>
                             <% } else { %>
-                                <form action="/items/buy/<%= item._id %>" method="POST" style="display:inline;">
-                                    <input type="hidden" name="newPrice" value="<%= item.currentPrice %>">
+                                <form action="/auctions/buy/<%= auction._id %>" method="POST" style="display:inline;">
+                                    <input type="hidden" name="newPrice" value="<%= auction.currentPrice %>">
                                     <button type="submit">Kup za obecną cenę</button>
                                 </form>
                             <% } %>
                         <% } %>
                     <% } %>
-                    <% if (user && item.user && item.user._id && item.user._id.equals(user._id)) { %>
-                        <form action="/items/delete/<%= item._id %>?_method=DELETE" method="POST" style="display:inline;">
+                    <% if (user && auction.user && auction.user._id && auction.user._id.equals(user._id)) { %>
+                        <form action="/auctions/delete/<%= auction._id %>?_method=DELETE" method="POST" style="display:inline;">
                             <button type="submit">Usuń</button>
                         </form>
                     <% } %>

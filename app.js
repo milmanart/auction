@@ -8,7 +8,7 @@ const MongoStore = require('connect-mongo');
 const Auction = require('./models/Auction');
 const app = express();
 
-// Подключение к базе данных MongoDB
+// Podłączenie do bazy danych MongoDB
 async function connectDB() {
     try {
         await mongoose.connect('mongodb://localhost:27017/auction-system', {
@@ -23,7 +23,7 @@ async function connectDB() {
 
 connectDB();
 
-// Настройка szablonów EJS
+// Konfiguracja szablonów EJS
 app.set('view engine', 'ejs');
 
 // Podłączenie body-parser
@@ -64,20 +64,18 @@ app.use(express.static('public'));
 // Podłączenie tras
 const userRoutes = require('./routes/userRoutes');
 const authRoutes = require('./routes/authRoutes');
-const itemRoutes = require('./routes/itemRoutes');
 const auctionRoutes = require('./routes/auctionRoutes');
-const adminRoutes = require('./routes/adminRoutes'); // Nowa trasa dla admina
+const adminRoutes = require('./routes/adminRoutes');
 app.use('/users', userRoutes);
 app.use('/auth', authRoutes);
-app.use('/items', itemRoutes);
 app.use('/auctions', auctionRoutes);
-app.use('/admin', adminRoutes); // Nowa trasa dla admina
+app.use('/admin', adminRoutes);
 
 // Strona główna
 app.get('/', async (req, res) => {
     try {
         const auctions = await Auction.find({}).populate('user', 'username').populate('buyer', 'username');
-        console.log('Aukcje ze strony głównej:', auctions); // Logowanie danych aukcji
+        console.log('Auctions from main page:', auctions); // Logowanie danych aukcji
         res.render('index', { auctions, user: req.session.user });
     } catch (err) {
         console.error('Błąd pobierania aukcji:', err);

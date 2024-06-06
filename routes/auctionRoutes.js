@@ -3,18 +3,24 @@ const router = express.Router();
 const auctionController = require('../controllers/auctionController');
 const { ensureAuthenticated } = require('../config/auth');
 
-// Wyświetlenie formularza dodawania aukcji
+// Wyświetlanie formularza dodawania przedmiotu
 router.get('/add', ensureAuthenticated, (req, res) => {
     res.render('auctions/add');
 });
 
-// Dodanie aukcji
+// Dodawanie przedmiotu
 router.post('/add', ensureAuthenticated, auctionController.addAuction);
 
-// Wyświetlenie wszystkich aukcji
+// Kupowanie przedmiotu
+router.post('/buy/:id', ensureAuthenticated, auctionController.buyAuction);
+
+// Usuwanie przedmiotu
+router.delete('/delete/:id', ensureAuthenticated, auctionController.deleteAuction);
+
+// Wyświetlanie wszystkich przedmiotów
 router.get('/', auctionController.getAllAuctions);
 
-// Wyświetlenie aukcji użytkownika
+// Wyświetlanie przedmiotów użytkownika
 router.get('/my-auctions', ensureAuthenticated, auctionController.getUserAuctions);
 
 module.exports = router;
