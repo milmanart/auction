@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel użytkownika</title>
+    <title>Aukcje</title>
     <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
@@ -15,8 +15,7 @@
     <% if (error_msg) { %>
         <div class="error"><%= error_msg %></div>
     <% } %>
-    <h2>Witamy, <%= user.username %>!</h2>
-    <a href="/auctions" class="btn">Przejdź do aukcji</a>
+    <h2>Witaj, <%= user.username %>!</h2>
     <a href="/auctions/my-auctions" class="btn">Moje aukcje</a>
     <a href="/auctions/add" class="btn">Dodaj aukcję</a>
 </div>

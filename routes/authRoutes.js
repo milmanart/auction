@@ -4,13 +4,13 @@ const bcrypt = require('bcryptjs');
 const User = require('../models/User');
 const { ensureAuthenticated } = require('../config/auth');
 
-// Strona logowania
+// Login Page
 router.get('/login', (req, res) => res.render('login', { errors: [] }));
 
-// Strona rejestracji
+// Register Page
 router.get('/register', (req, res) => res.render('register', { errors: [] }));
 
-// Rejestracja
+// Register
 router.post('/register', async (req, res) => {
     const { username, email, password, password2, isAdmin } = req.body;
     let errors = [];
@@ -20,7 +20,7 @@ router.post('/register', async (req, res) => {
     }
 
     if (password !== password2) {
-        errors.push({ msg: 'Hasła się nie zgadzają' });
+        errors.push({ msg: 'Hasła nie pasują do siebie' });
     }
 
     if (password.length < 6) {
@@ -40,7 +40,7 @@ router.post('/register', async (req, res) => {
         try {
             let user = await User.findOne({ email });
             if (user) {
-                errors.push({ msg: 'Email jest już zarejestrowany' });
+                errors.push({ msg: 'Email już istnieje' });
                 res.render('register', {
                     errors,
                     username,
@@ -54,13 +54,14 @@ router.post('/register', async (req, res) => {
                     username,
                     email,
                     password,
-                    isAdmin: isAdmin === 'on' // Sprawdzenie stanu pola wyboru
+                    isAdmin: isAdmin === 'on'
                 });
                 const salt = await bcrypt.genSalt(10);
                 newUser.password = await bcrypt.hash(password, salt);
                 await newUser.save();
-                req.flash('success_msg', 'Zarejestrowano pomyślnie, możesz się zalogować');
-                res.redirect('/auth/login');
+                // Automatically log in the user after registration
+                req.session.user = newUser;
+                res.redirect('/');
             }
         } catch (err) {
             console.error(err);
@@ -69,7 +70,7 @@ router.post('/register', async (req, res) => {
     }
 });
 
-// Logowanie
+// Login
 router.post('/login', async (req, res) => {
     const { email, password } = req.body;
     let errors = [];
@@ -87,9 +88,9 @@ router.post('/login', async (req, res) => {
                 const isMatch = await bcrypt.compare(password, user.password);
                 if (isMatch) {
                     req.session.user = user;
-                    res.redirect('/auth/dashboard');
+                    res.redirect('/');
                 } else {
-                    errors.push({ msg: 'Niepoprawne hasło' });
+                    errors.push({ msg: 'Nieprawidłowe hasło' });
                     res.render('login', { errors, email, password });
                 }
             }
@@ -100,14 +101,14 @@ router.post('/login', async (req, res) => {
     }
 });
 
-// Panel użytkownika
+// Dashboard
 router.get('/dashboard', ensureAuthenticated, (req, res) =>
     res.render('dashboard', {
         user: req.session.user
     })
 );
 
-// Wylogowanie
+// Logout
 router.get('/logout', (req, res) => {
     req.session.destroy(err => {
         if (err) {
