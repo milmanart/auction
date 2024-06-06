@@ -1,16 +1,24 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Панель управления</title>
+    <title>Panel użytkownika</title>
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
-<h1>Добро пожаловать, <%= user.username %></h1>
-<% if (user.isAdmin) { %>
-    <a href="/users">Управление пользователями</a>
-<% } %>
-<a href="/items">Список всех аукционов</a>
-<a href="/auth/logout">Выйти</a>
+<%- include('partials/header') %>
+<div class="container">
+    <% if (success_msg) { %>
+        <div class="success"><%= success_msg %></div>
+    <% } %>
+    <% if (error_msg) { %>
+        <div class="error"><%= error_msg %></div>
+    <% } %>
+    <h2>Witamy, <%= user.username %>!</h2>
+    <a href="/items" class="btn">Przejdź do aukcji</a>
+    <a href="/items/my-items" class="btn">Moje aukcje</a>
+    <a href="/items/add" class="btn">Dodaj aukcję</a>
+</div>
 </body>
 </html>

@@ -46,7 +46,7 @@ exports.getUser = async (req, res) => {
 exports.getAllUsers = async (req, res) => {
     try {
         const users = await User.find({});
-        res.render('users/index', { users });
+        res.render('users/index', { users, user: req.session.user });
     } catch (err) {
         res.status(500).send(err);
     }

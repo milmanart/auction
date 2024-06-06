@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Przedmioty na aukcji</title>
+    <title>Moje aukcje</title>
     <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
@@ -15,6 +15,7 @@
     <% if (error_msg) { %>
         <div class="error"><%= error_msg %></div>
     <% } %>
+    <h2>Moje aukcje</h2>
     <ul>
         <% items.forEach(function(item) { %>
             <li>

@@ -1,18 +1,24 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Auctioneria</title>
+    <title>Strona główna</title>
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
-<h1>Добро пожаловать на Auctioneria!</h1>
-<% if (user) { %>
-    <p>Вы залогинены как <%= user.username %>.</p>
-    <a href="/auth/dashboard">Перейти в личный кабинет</a>
-<% } else { %>
-    <p>Пожалуйста, залогиньтесь, чтобы получить доступ к вашему личному кабинету.</p>
-    <a href="/auth/login">Войти</a>
-<% } %>
+<%- include('partials/header') %>
+<div class="container">
+    <% if (success_msg) { %>
+        <div class="success"><%= success_msg %></div>
+    <% } %>
+    <% if (error_msg) { %>
+        <div class="error"><%= error_msg %></div>
+    <% } %>
+    <h2>O Auctioneria</h2>
+    <p>Witamy na Auctioneria, Twoim najlepszym wyborze dla aukcji online! Na naszej stronie możesz wystawiać na sprzedaż różne przedmioty i brać udział w ich kupnie. Oferujemy platformę do wygodnego i bezpiecznego prowadzenia aukcji. Zarejestruj się i zacznij kupować i sprzedawać już dziś!</p>
+    <p>Kliknij przycisk poniżej, aby przeglądać aktualne aukcje:</p>
+    <a href="/items" class="btn">Przejdź do aukcji</a>
+</div>
 </body>
 </html>

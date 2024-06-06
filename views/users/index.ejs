@@ -1,23 +1,32 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Управление пользователями</title>
+    <title>Zarządzaj użytkownikami</title>
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
-<h1>Пользователи</h1>
-<a href="/users/add">Добавить пользователя</a>
-<ul>
-    <% users.forEach(function(user) { %>
-        <li>
-            <%= user.username %> - <%= user.email %>
-            <form action="/users/delete/<%= user._id %>?_method=DELETE" method="POST" style="display:inline;">
-                <button type="submit">Удалить</button>
-            </form>
-        </li>
-    <% }); %>
-</ul>
-<a href="/auth/dashboard">Назад в личный кабинет</a>
+<%- include('../partials/header') %>
+<div class="container">
+    <h1>Użytkownicy</h1>
+    <% if (success_msg) { %>
+        <div class="success"><%= success_msg %></div>
+    <% } %>
+    <% if (error_msg) { %>
+        <div class="error"><%= error_msg %></div>
+    <% } %>
+    <ul>
+        <% users.forEach(function(user) { %>
+            <li>
+                <%= user.username %> - <%= user.email %>
+                <a href="/users/edit/<%= user._id %>" class="btn">Edytuj</a>
+                <form action="/users/delete/<%= user._id %>?_method=DELETE" method="POST" style="display:inline;">
+                    <button type="submit" class="btn">Usuń</button>
+                </form>
+            </li>
+        <% }); %>
+    </ul>
+</div>
 </body>
 </html>

@@ -3,21 +3,24 @@ const router = express.Router();
 const itemController = require('../controllers/itemController');
 const { ensureAuthenticated } = require('../config/auth');
 
-// Отображение формы для добавления предмета
+// Wyświetlenie formularza dodawania przedmiotu
 router.get('/add', ensureAuthenticated, (req, res) => {
     res.render('items/add');
 });
 
-// Добавление предмета
+// Dodanie przedmiotu
 router.post('/add', ensureAuthenticated, itemController.addItem);
 
-// Покупка предмета
+// Zakup przedmiotu
 router.post('/buy/:id', ensureAuthenticated, itemController.buyItem);
 
-// Удаление предмета
+// Usunięcie przedmiotu
 router.delete('/delete/:id', ensureAuthenticated, itemController.deleteItem);
 
-// Отображение всех предметов
+// Wyświetlenie wszystkich przedmiotów
 router.get('/', itemController.getAllItems);
+
+// Wyświetlenie przedmiotów użytkownika
+router.get('/my-items', ensureAuthenticated, itemController.getUserItems);
 
 module.exports = router;

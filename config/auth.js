@@ -3,7 +3,7 @@ module.exports = {
         if (req.session.user) {
             return next();
         }
-        req.flash('error_msg', 'Please log in to view that resource');
+        req.flash('error_msg', 'Proszę się zalogować, aby uzyskać dostęp do tej zasoby');
         res.redirect('/auth/login');
     }
 };

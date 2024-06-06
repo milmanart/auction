@@ -1,19 +1,20 @@
 const express = require('express');
 const router = express.Router();
 const auctionController = require('../controllers/auctionController');
+const { ensureAuthenticated } = require('../config/auth');
 
-// Отображение формы для добавления предмета на аукцион
-router.get('/add', (req, res) => {
+// Wyświetlenie formularza dodawania aukcji
+router.get('/add', ensureAuthenticated, (req, res) => {
     res.render('auctions/add');
 });
 
-// Отображение формы для редактирования предмета на аукционе
-router.get('/edit/:id', auctionController.getAuction);
+// Dodanie aukcji
+router.post('/add', ensureAuthenticated, auctionController.addAuction);
 
-// Управление аукционами
+// Wyświetlenie wszystkich aukcji
 router.get('/', auctionController.getAllAuctions);
-router.post('/add', auctionController.addAuction);
-router.put('/edit/:id', auctionController.editAuction);
-router.delete('/delete/:id', auctionController.deleteAuction);
+
+// Wyświetlenie aukcji użytkownika
+router.get('/my-auctions', ensureAuthenticated, auctionController.getUserAuctions);
 
 module.exports = router;

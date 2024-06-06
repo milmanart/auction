@@ -4,27 +4,27 @@ const bcrypt = require('bcryptjs');
 const User = require('../models/User');
 const { ensureAuthenticated } = require('../config/auth');
 
-// Login Page
+// Strona logowania
 router.get('/login', (req, res) => res.render('login', { errors: [] }));
 
-// Register Page
+// Strona rejestracji
 router.get('/register', (req, res) => res.render('register', { errors: [] }));
 
-// Register
+// Rejestracja
 router.post('/register', async (req, res) => {
     const { username, email, password, password2, isAdmin } = req.body;
     let errors = [];
 
     if (!username || !email || !password || !password2) {
-        errors.push({ msg: 'Please enter all fields' });
+        errors.push({ msg: 'Proszę wypełnić wszystkie pola' });
     }
 
     if (password !== password2) {
-        errors.push({ msg: 'Passwords do not match' });
+        errors.push({ msg: 'Hasła się nie zgadzają' });
     }
 
     if (password.length < 6) {
-        errors.push({ msg: 'Password must be at least 6 characters' });
+        errors.push({ msg: 'Hasło musi mieć co najmniej 6 znaków' });
     }
 
     if (errors.length > 0) {
@@ -40,7 +40,7 @@ router.post('/register', async (req, res) => {
         try {
             let user = await User.findOne({ email });
             if (user) {
-                errors.push({ msg: 'Email already exists' });
+                errors.push({ msg: 'Email jest już zarejestrowany' });
                 res.render('register', {
                     errors,
                     username,
@@ -54,34 +54,34 @@ router.post('/register', async (req, res) => {
                     username,
                     email,
                     password,
-                    isAdmin: isAdmin === 'on' // Проверка состояния чекбокса
+                    isAdmin: isAdmin === 'on' // Sprawdzenie stanu pola wyboru
                 });
                 const salt = await bcrypt.genSalt(10);
                 newUser.password = await bcrypt.hash(password, salt);
                 await newUser.save();
-                req.flash('success_msg', 'You are now registered and can log in');
+                req.flash('success_msg', 'Zarejestrowano pomyślnie, możesz się zalogować');
                 res.redirect('/auth/login');
             }
         } catch (err) {
             console.error(err);
-            res.status(500).send('Server error');
+            res.status(500).send('Błąd serwera');
         }
     }
 });
 
-// Login
+// Logowanie
 router.post('/login', async (req, res) => {
     const { email, password } = req.body;
     let errors = [];
 
     if (!email || !password) {
-        errors.push({ msg: 'Please enter all fields' });
+        errors.push({ msg: 'Proszę wypełnić wszystkie pola' });
         res.render('login', { errors, email, password });
     } else {
         try {
             const user = await User.findOne({ email });
             if (!user) {
-                errors.push({ msg: 'Email not registered' });
+                errors.push({ msg: 'Email nie jest zarejestrowany' });
                 res.render('login', { errors, email, password });
             } else {
                 const isMatch = await bcrypt.compare(password, user.password);
@@ -89,25 +89,25 @@ router.post('/login', async (req, res) => {
                     req.session.user = user;
                     res.redirect('/auth/dashboard');
                 } else {
-                    errors.push({ msg: 'Incorrect password' });
+                    errors.push({ msg: 'Niepoprawne hasło' });
                     res.render('login', { errors, email, password });
                 }
             }
         } catch (err) {
             console.error(err);
-            res.status(500).send('Server error');
+            res.status(500).send('Błąd serwera');
         }
     }
 });
 
-// Dashboard
+// Panel użytkownika
 router.get('/dashboard', ensureAuthenticated, (req, res) =>
     res.render('dashboard', {
         user: req.session.user
     })
 );
 
-// Logout
+// Wylogowanie
 router.get('/logout', (req, res) => {
     req.session.destroy(err => {
         if (err) {

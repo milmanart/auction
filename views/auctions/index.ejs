@@ -1,22 +1,36 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Управление аукционами</title>
+    <title>Zarządzaj aukcjami</title>
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
-<h1>Аукционы</h1>
-<a href="/auctions/add">Добавить предмет на аукцион</a>
-<ul>
-    <% auctions.forEach(function(auction) { %>
-        <li>
-            <%= auction.title %> - <%= auction.currentBid %>$
-            <a href="/auctions/edit/<%= auction._id %>">Редактировать</a>
-            <a href="/auctions/delete/<%= auction._id %>">Удалить</a>
-        </li>
-    <% }); %>
-</ul>
-<a href="/">Назад на главную</a>
+<%- include('../partials/header') %>
+<div class="container">
+    <h1>Moje aukcje</h1>
+    <a href="/auctions/add" class="btn">Dodaj przedmiot na aukcję</a>
+    <% if (success_msg) { %>
+        <div class="success"><%= success_msg %></div>
+    <% } %>
+    <% if (error_msg) { %>
+        <div class="error"><%= error_msg %></div>
+    <% } %>
+    <ul>
+        <% auctions.forEach(function(auction) { %>
+            <li>
+                <strong><%= auction.title %></strong><br>
+                <%= auction.description %><br>
+                Cena wywoławcza: <%= auction.initialPrice %> PLN<br>
+                Obecna cena: <%= auction.currentPrice %> PLN<br>
+                <a href="/auctions/edit/<%= auction._id %>" class="btn">Edytuj</a>
+                <form action="/auctions/delete/<%= auction._id %>?_method=DELETE" method="POST" style="display:inline;">
+                    <button type="submit" class="btn">Usuń</button>
+                </form>
+            </li>
+        <% }); %>
+    </ul>
+</div>
 </body>
 </html>

@@ -1,0 +1,12 @@
+<header>
+    <h1>Witamy na Auctioneria!</h1>
+    <nav>
+        <a href="/">Strona główna</a>
+        <a href="/auth/dashboard">Panel użytkownika</a>
+        <% if (isAuthenticated) { %>
+            <a href="/auth/logout">Wyloguj się</a>
+        <% } else { %>
+            <a href="/auth/login">Zaloguj się</a>
+        <% } %>
+    </nav>
+</header>
