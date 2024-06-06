@@ -26,10 +26,6 @@ const auctionSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         default: null
-    },
-    endDate: {
-        type: Date,
-        required: true
     }
 });
 

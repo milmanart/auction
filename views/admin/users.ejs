@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Użytkownicy</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+<%- include('../partials/header') %>
+<div class="container">
+    <h1>Użytkownicy</h1>
+    <% if (success_msg) { %>
+        <div class="success"><%= success_msg %></div>
+    <% } %>
+    <% if (error_msg) { %>
+        <div class="error"><%= error_msg %></div>
+    <% } %>
+    <ul>
+        <% users.forEach(function(user) { %>
+            <li>
+                <%= user.username %> - <%= user.email %>
+                <form action="/admin/users/<%= user._id %>?_method=DELETE" method="POST" style="display:inline;">
+                    <button type="submit">Usuń</button>
+                </form>
+            </li>
+        <% }); %>
+    </ul>
+</div>
+</body>
+</html>

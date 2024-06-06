@@ -3,6 +3,9 @@
     <nav>
         <a href="/">Strona główna</a>
         <a href="/auth/dashboard">Panel użytkownika</a>
+        <% if (user && user.isAdmin) { %>
+            <a href="/admin/dashboard">Panel administratora</a>
+        <% } %>
         <% if (isAuthenticated) { %>
             <a href="/auth/logout">Wyloguj się</a>
         <% } else { %>
@@ -10,3 +13,17 @@
         <% } %>
     </nav>
 </header>
+
+<style>
+    .admin-panel {
+        display: inline-block;
+        margin-left: 20px;
+    }
+    .admin-panel span {
+        font-weight: bold;
+        margin-right: 10px;
+    }
+    .admin-panel a {
+        margin-left: 10px;
+    }
+</style>
