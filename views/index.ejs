@@ -50,9 +50,6 @@
                         <% } %>
                     <% } %>
                     <% if (user && auction.user && auction.user._id && auction.user._id.equals(user._id)) { %>
-                        <form action="/auctions/delete/<%= auction._id %>?_method=DELETE" method="POST" style="display:inline;">
-                            <button type="submit">Usuń</button>
-                        </form>
                     <% } %>
                 </div>
             </li>

@@ -23,4 +23,10 @@ router.get('/', auctionController.getAllAuctions);
 // Wyświetlanie przedmiotów użytkownika
 router.get('/my-auctions', ensureAuthenticated, auctionController.getUserAuctions);
 
+// Wyświetlenie formularza edycji aukcji
+router.get('/edit/:id', ensureAuthenticated, auctionController.editAuctionForm);
+
+// Aktualizacja aukcji
+router.put('/edit/:id', ensureAuthenticated, auctionController.updateAuction);
+
 module.exports = router;
