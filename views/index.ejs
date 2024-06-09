@@ -5,6 +5,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Strona główna</title>
     <link rel="stylesheet" href="/css/styles.css">
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+        th {
+            background-color: #f2f2f2;
+            text-align: left;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .buy-button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 5px 10px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border: none;
+            border-radius: 4px;
+        }
+    </style>
 </head>
 <body>
 <%- include('partials/header') %>
@@ -18,43 +49,46 @@
     <h2>O stronie Auctioneria</h2>
     <p>Witamy na Auctioneria, twoim najlepszym wyborem dla aukcji online! Na naszej stronie możesz wystawiać różne przedmioty na sprzedaż i brać udział w ich zakupie. Zapewniamy platformę do wygodnego i bezpiecznego przeprowadzania aukcji. Zarejestruj się i zacznij kupować i sprzedawać już dziś!</p>
     <h2>Wszystkie aukcje</h2>
-    <ul>
+    <table>
+        <thead>
+        <tr>
+            <th>Tytuł</th>
+            <th>Opis</th>
+            <th>Cena początkowa</th>
+            <th>Obecna cena</th>
+            <th>Sprzedawca</th>
+            <th>Kupił</th>
+            <th>Akcja</th>
+        </tr>
+        </thead>
+        <tbody>
         <% auctions.forEach(function(auction) { %>
-            <li>
-                <div>
-                    <strong><%= auction.title %></strong><br>
-                    <%= auction.description %><br>
-                    Cena początkowa: <%= auction.initialPrice %> PLN<br>
-                    Cena bieżąca: <%= auction.currentPrice %> PLN<br>
-                    <% if (auction.user) { %>
-                        Sprzedawca: <%= auction.user.username %><br>
-                    <% } %>
-                    <% if (auction.buyer) { %>
-                        Kupił: <%= auction.buyer.username %><br>
-                    <% } %>
-                </div>
-                <div>
-                    <% if (user && auction.user && auction.user._id && !auction.user._id.equals(user._id)) { %>
-                        <% if (!auction.buyer || (auction.buyer && !auction.buyer.equals(user._id))) { %>
-                            <% if (auction.buyer) { %>
-                                <form action="/auctions/buy/<%= auction._id %>" method="POST" style="display:inline;">
-                                    <input type="number" name="newPrice" min="<%= auction.currentPrice + 1 %>" required>
-                                    <button type="submit">Przebij cenę i kup</button>
-                                </form>
-                            <% } else { %>
-                                <form action="/auctions/buy/<%= auction._id %>" method="POST" style="display:inline;">
-                                    <input type="hidden" name="newPrice" value="<%= auction.currentPrice %>">
-                                    <button type="submit">Kup za bieżącą cenę</button>
-                                </form>
-                            <% } %>
+            <tr>
+                <td><%= auction.title %></td>
+                <td><%= auction.description %></td>
+                <td><%= auction.initialPrice %> PLN</td>
+                <td><%= auction.currentPrice %> PLN</td>
+                <td><%= auction.user ? auction.user.username : 'N/A' %></td>
+                <td><%= auction.buyer ? auction.buyer.username : 'N/A' %></td>
+                <td>
+                    <% if (user && auction.user && auction.user._id && !auction.user._id.equals(user._id) && (!auction.buyer || (auction.buyer && !auction.buyer.equals(user._id)))) { %>
+                        <% if (!auction.buyer) { %>
+                            <form action="/auctions/buy/<%= auction._id %>" method="POST" style="display:inline;">
+                                <input type="hidden" name="newPrice" value="<%= auction.currentPrice %>">
+                                <button type="submit" class="buy-button">Kup</button>
+                            </form>
+                        <% } else { %>
+                            <form action="/auctions/buy/<%= auction._id %>" method="POST" style="display:inline;">
+                                <input type="number" name="newPrice" min="<%= auction.currentPrice + 1 %>" required>
+                                <button type="submit" class="buy-button">Przebij cenę i kup</button>
+                            </form>
                         <% } %>
                     <% } %>
-                    <% if (user && auction.user && auction.user._id && auction.user._id.equals(user._id)) { %>
-                    <% } %>
-                </div>
-            </li>
+                </td>
+            </tr>
         <% }); %>
-    </ul>
+        </tbody>
+    </table>
 </div>
 </body>
 </html>
