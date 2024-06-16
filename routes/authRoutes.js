@@ -4,13 +4,10 @@ const bcrypt = require('bcryptjs');
 const User = require('../models/User');
 const { ensureAuthenticated } = require('../config/auth');
 
-// Login Page
 router.get('/login', (req, res) => res.render('login', { errors: [] }));
 
-// Register Page
 router.get('/register', (req, res) => res.render('register', { errors: [] }));
 
-// Register
 router.post('/register', async (req, res) => {
     const { username, email, password, password2, isAdmin } = req.body;
     let errors = [];
@@ -59,7 +56,6 @@ router.post('/register', async (req, res) => {
                 const salt = await bcrypt.genSalt(10);
                 newUser.password = await bcrypt.hash(password, salt);
                 await newUser.save();
-                // Automatically log in the user after registration
                 req.session.user = newUser;
                 res.redirect('/');
             }
@@ -70,7 +66,6 @@ router.post('/register', async (req, res) => {
     }
 });
 
-// Login
 router.post('/login', async (req, res) => {
     const { email, password } = req.body;
     let errors = [];
@@ -101,14 +96,12 @@ router.post('/login', async (req, res) => {
     }
 });
 
-// Dashboard
 router.get('/dashboard', ensureAuthenticated, (req, res) =>
     res.render('dashboard', {
         user: req.session.user
     })
 );
 
-// Logout
 router.get('/logout', (req, res) => {
     req.session.destroy(err => {
         if (err) {

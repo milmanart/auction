@@ -8,7 +8,6 @@ const MongoStore = require('connect-mongo');
 const Auction = require('./models/Auction');
 const app = express();
 
-// Podłączenie do bazy danych MongoDB
 async function connectDB() {
     try {
         await mongoose.connect('mongodb://localhost:27017/auction-system', {
@@ -23,16 +22,12 @@ async function connectDB() {
 
 connectDB();
 
-// Konfiguracja szablonów EJS
 app.set('view engine', 'ejs');
 
-// Podłączenie body-parser
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// Podłączenie method-override dla wsparcia metod PUT i DELETE
 app.use(methodOverride('_method'));
 
-// Konfiguracja sesji z użyciem MongoDB jako przechowalni
 app.use(
     session({
         secret: 'secret',
@@ -40,15 +35,13 @@ app.use(
         saveUninitialized: false,
         store: MongoStore.create({
             mongoUrl: 'mongodb://localhost:27017/auction-system',
-            ttl: 14 * 24 * 60 * 60 // Sesja jest przechowywana przez 14 dni
+            ttl: 14 * 24 * 60 * 60
         })
     })
 );
 
-// Connect flash
 app.use(flash());
 
-// Globalne zmienne
 app.use((req, res, next) => {
     res.locals.success_msg = req.flash('success_msg');
     res.locals.error_msg = req.flash('error_msg');
@@ -58,10 +51,8 @@ app.use((req, res, next) => {
     next();
 });
 
-// Podłączenie plików statycznych
 app.use(express.static('public'));
 
-// Podłączenie tras
 const userRoutes = require('./routes/userRoutes');
 const authRoutes = require('./routes/authRoutes');
 const auctionRoutes = require('./routes/auctionRoutes');
@@ -71,11 +62,10 @@ app.use('/auth', authRoutes);
 app.use('/auctions', auctionRoutes);
 app.use('/admin', adminRoutes);
 
-// Strona główna
 app.get('/', async (req, res) => {
     try {
         const auctions = await Auction.find({}).populate('user', 'username').populate('buyer', 'username');
-        console.log('Auctions from main page:', auctions); // Logowanie danych aukcji
+        console.log('Auctions from main page:', auctions);
         res.render('index', { auctions, user: req.session.user });
     } catch (err) {
         console.error('Błąd pobierania aukcji:', err);
@@ -83,7 +73,6 @@ app.get('/', async (req, res) => {
     }
 });
 
-// Uruchomienie serwera
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Serwer uruchomiony na porcie ${PORT}`);
